@@ -11,6 +11,8 @@ interface EXIFStatic {
 	readFromBinaryFile(file: any): any;
 }
 
+console.log('Using ApagoInc exif-js fork!');
+
 class Exif implements EXIFStatic {
 	private isXmpEnabled = false;
 	private debug = false;
@@ -860,4 +862,4 @@ class Exif implements EXIFStatic {
 	}
 }
 
-export = Exif;
+export = new Exif();
