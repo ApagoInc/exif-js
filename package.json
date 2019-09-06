@@ -21,7 +21,7 @@
   ],
   "author": "Jacob Seidelin",
   "maintainers": [
-      "rett gerst"
+    "rett gerst"
   ],
   "license": "MIT",
   "bugs": {
@@ -38,9 +38,9 @@
     "example"
   ],
   "files": [
-      "README.md",
-      "LICENSE.md",
-      "dist/"
+    "README.md",
+    "LICENSE.md",
+    "dist/"
   ],
   "devDependencies": {
     "prettier": "^1.18.2",
