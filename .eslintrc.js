@@ -74,8 +74,10 @@ module.exports = {
 		'comma-style': ['warn'],
 		'default-case': ['warn'],
 		'no-fallthrough': ['warn'],
-		eqeqeq: ['warn'],
+		// eqeqeq: ['warn'],
 		'keyword-spacing': ['warn'],
-		'no-empty': ['warn']
+		'no-empty': ['warn'],
+		'no-useless-escape': ['warn'],
+		'one-var': ['warn', 'never']
 	}
 };

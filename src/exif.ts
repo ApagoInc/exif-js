@@ -1,6 +1,8 @@
 import { ExifTags, TiffTags, GPSTags, IFD1Tags } from './tags';
 import { StringValues } from './strings';
 
+type Tags<T extends { [k: string]: string }> = { [k in T[keyof T]]: any };
+
 interface EXIFStatic {
 	getData(url: string, callback: any): any;
 	getTag(img: any, tag: any): any;
@@ -14,9 +16,9 @@ class Exif implements EXIFStatic {
 	private debug = false;
 
 	constructor() {
-		if (obj instanceof EXIF) return obj;
-		if (!(this instanceof EXIF)) return new EXIF(obj);
-		this.EXIFwrapped = obj;
+		// if (obj instanceof EXIF) return obj;
+		// if (!(this instanceof EXIF)) return new EXIF(obj);
+		// this.EXIFwrapped = obj;
 	}
 
 	private static IptcFieldMap = {
@@ -70,9 +72,9 @@ class Exif implements EXIFStatic {
 
 	public getAllTags(img) {
 		if (!this.imageHasData(img)) return {};
-		const a,
-			data = img.exifdata,
-			tags = {};
+		let a;
+		const data = img.exifdata;
+		const tags = {};
 		for (a in data) {
 			if (data.hasOwnProperty(a)) {
 				tags[a] = data[a];
@@ -83,8 +85,8 @@ class Exif implements EXIFStatic {
 
 	public getAllIptcTags(img) {
 		if (!this.imageHasData(img)) return {};
-		const data = img.iptcdata,
-			tags = {};
+		const data = img.iptcdata;
+		const tags = {};
 		for (const a in data) {
 			if (data.hasOwnProperty(a)) {
 				tags[a] = data[a];
@@ -95,9 +97,9 @@ class Exif implements EXIFStatic {
 
 	public pretty(img) {
 		if (!this.imageHasData(img)) return '';
-		let a,
-			data = img.exifdata,
-			strPretty = '';
+		let a;
+		const data = img.exifdata;
+		let strPretty = '';
 		for (a in data) {
 			if (data.hasOwnProperty(a)) {
 				if (typeof data[a] === 'object') {
@@ -236,8 +238,8 @@ class Exif implements EXIFStatic {
 		}
 
 		const length = file.byteLength;
-		let offset = 2,
-			marker;
+		let offset = 2;
+		let marker;
 
 		while (offset < length) {
 			if (dataView.getUint8(offset) !== 0xff) {
@@ -262,8 +264,9 @@ class Exif implements EXIFStatic {
 
 				return this.readEXIFData(
 					dataView,
-					offset + 4,
-					dataView.getUint16(offset + 2) - 2
+					offset + 4
+					// the following line was present in the original source code but seems to do nothing
+					// dataView.getUint16(offset + 2) - 2
 				);
 
 				// offset += 2 + file.getShortAt(offset+2, true);
@@ -282,9 +285,8 @@ class Exif implements EXIFStatic {
 			return false; // not a valid jpeg
 		}
 
-		const offset = 2,
-			length = file.byteLength;
-
+		let offset = 2;
+		const length = file.byteLength;
 		const isFieldSegmentStart = (dataView, offset) => {
 			return (
 				dataView.getUint8(offset) === 0x38 &&
@@ -322,7 +324,11 @@ class Exif implements EXIFStatic {
 	private readIPTCData(file, startOffset, sectionLength) {
 		const dataView = new DataView(file);
 		const data = {};
-		let fieldValue, fieldName, dataSize, segmentType, segmentSize;
+		let fieldValue;
+		let fieldName;
+		let dataSize;
+		let segmentType;
+		let segmentSize;
 		let segmentStartPos = startOffset;
 		while (segmentStartPos < startOffset + sectionLength) {
 			if (
@@ -357,12 +363,18 @@ class Exif implements EXIFStatic {
 		return data;
 	}
 
-	private readTags(file, tiffStart, dirStart, strings, bigEnd) {
-		let entries = file.getUint16(dirStart, !bigEnd),
-			tags = {},
-			entryOffset,
-			tag,
-			i;
+	private readTags<T extends { [key: string]: string }>(
+		file,
+		tiffStart,
+		dirStart,
+		strings: T,
+		bigEnd
+	): Tags<T> {
+		const entries = file.getUint16(dirStart, !bigEnd);
+		const tags: Partial<Tags<T>> = {};
+		let entryOffset;
+		let tag;
+		let i;
 
 		for (i = 0; i < entries; i++) {
 			entryOffset = dirStart + i * 12 + 2;
@@ -377,19 +389,19 @@ class Exif implements EXIFStatic {
 				bigEnd
 			);
 		}
-		return tags;
+		return tags as Tags<T>;
 	}
 
 	private readTagValue(file, entryOffset, tiffStart, dirStart, bigEnd) {
-		let type = file.getUint16(entryOffset + 2, !bigEnd),
-			numValues = file.getUint32(entryOffset + 4, !bigEnd),
-			valueOffset = file.getUint32(entryOffset + 8, !bigEnd) + tiffStart,
-			offset,
-			vals,
-			val,
-			n,
-			numerator,
-			denominator;
+		const type = file.getUint16(entryOffset + 2, !bigEnd);
+		const numValues = file.getUint32(entryOffset + 4, !bigEnd);
+		const valueOffset = file.getUint32(entryOffset + 8, !bigEnd) + tiffStart;
+		let offset;
+		let vals;
+		let val;
+		let n;
+		let numerator;
+		let denominator;
 
 		switch (type) {
 			case 1: // byte, 8-bit unsigned int
@@ -585,12 +597,12 @@ class Exif implements EXIFStatic {
 			return false;
 		}
 
-		let bigEnd,
-			tags,
-			tag,
-			exifData,
-			gpsData,
-			tiffOffset = start + 6;
+		let bigEnd;
+		let tags;
+		let tag;
+		let exifData;
+		let gpsData;
+		const tiffOffset = start + 6;
 
 		// test for TIFF validity and endianness
 		if (file.getUint16(tiffOffset) == 0x4949) {
@@ -725,9 +737,9 @@ class Exif implements EXIFStatic {
 			return false; // not a valid jpeg
 		}
 
-		let offset = 2,
-			length = file.byteLength,
-			dom = new DOMParser();
+		let offset = 2;
+		const length = file.byteLength;
+		const dom = new DOMParser();
 
 		while (offset < length - 4) {
 			if (this.getStringFromDB(dataView, offset, 4) == 'http') {

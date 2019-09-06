@@ -2,10 +2,9 @@
 	"compilerOptions": {
 		"target": "es2017",
 		"module": "commonjs",
-		"strict": true,
 		"sourceMap": true,
 		"declaration": true,
-		"lib": ["es2017"],
+		"lib": ["es2017", "DOM"],
 		"types": []
 	},
 	"include": ["src/"],
