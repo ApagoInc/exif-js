@@ -1,28 +1,33 @@
 {
-  "name": "exif-js",
-  "version": "2.3.0",
-  "description": "JavaScript library for reading EXIF image metadata",
-  "main": "exif.js",
-  "types": "exif.d.ts",
-  "directories": {
-    "example": "example"
+  "name": "@apagoinc/exif-js",
+  "version": "3.0.0",
+  "description": "JavaScript library for reading EXIF image metadata - Typescript port",
+  "main": "dist/exif.js",
+  "types": "dist/exif.d.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "prettier": "prettier -c './**/*.{ts,json,html,scss}'",
+    "prettier:fix": "prettier --write './**/*.{ts,json,html,scss}'",
+    "lint": "eslint src/**/*.ts --max-warnings 0",
+    "lint:fix": "npm run --silent lint -- --fix"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/exif-js/exif-js"
+    "url": "https://github.com/ApagoInc/exif-js"
   },
   "keywords": [
     "exif"
   ],
   "author": "Jacob Seidelin",
   "maintainers": [
-    "Roald de Vries"
+      "rett gerst"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/exif-js/exif-js/issues"
+    "url": "https://github.com/ApagoInc/exif-js/issues"
   },
-  "homepage": "https://github.com/exif-js/exif-js",
+  "homepage": "https://github.com/ApagoInc/exif-js",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -32,8 +37,17 @@
     "spec",
     "example"
   ],
+  "files": [
+      "README.md",
+      "LICENSE.md",
+      "dist/"
+  ],
   "devDependencies": {
-    "bower": "^1.4.2",
-    "mversion": "^1.10.0"
+    "prettier": "^1.18.2",
+    "typescript": "^3.6.2",
+    "@typescript-eslint/eslint-plugin": "^2.1.0",
+    "@typescript-eslint/parser": "^2.1.0",
+    "eslint": "^6.3.0",
+    "eslint-plugin-jsdoc": "^15.9.1"
   }
 }

@@ -1,0 +1,4 @@
+package*.json
+docs/
+dist/
+coverage/

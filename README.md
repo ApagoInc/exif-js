@@ -1,4 +1,23 @@
-# Exif.js
+# <p align="center">Exif.js (TypeScript port)</p>
+
+<p align="center">
+  <a href="typescriptlang.org">
+    <img src="https://camo.githubusercontent.com/09b3f1112f2778ba9f739339a7037886f232508f/68747470733a2f2f62616467656e2e6e65742f62616467652f547970655363726970742f6c6f6f73652532302546302539462539382541352f6f72616e6765"></img>
+  </a>
+  <a href="https://eslint.org/">
+    <img src="https://img.shields.io/badge/linter-eslint-3a33d1"></img>
+  </a>
+  
+  <!-- <a href="https://dependabot.com">
+    <img src="https://api.dependabot.com/badges/status?host=github&repo=ApagoInc/pipevine&identifier=197454492"></img>
+  </a> -->
+  <!-- <a href="https://circleci.com/gh/ApagoInc/pipevine">
+    <img src="https://circleci.com/gh/ApagoInc/pipevine.svg?style=shield&circle-token=7455c61f1600366de726efd78586ffb463b4c400"></img>
+  </a> -->
+  <a href="https://github.com/prettier/prettier">
+    <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg"></img>
+  </a>
+</p>
 
 A JavaScript library for reading [EXIF meta data](https://en.wikipedia.org/wiki/Exchangeable_image_file_format) from image files.
 
@@ -8,9 +27,10 @@ This package can also be used in AMD or CommonJS environments.
 **Note**: The EXIF standard applies only to `.jpg` and `.tiff` images. EXIF logic in this package is based on the EXIF standard v2.2 ([JEITA CP-3451, included in this repo](/spec/Exif2-2.pdf)).
 
 ## Install
+
 Install `exif-js` through [NPM](https://www.npmjs.com/#getting-started):
 
-    npm install exif-js --save    
+    npm install exif-js --save
 
 Or [Bower](http://bower.io/):
 
@@ -29,14 +49,16 @@ You can also use a minified version hosted on jsDelivr
 ```
 
 ## Usage
+
 The package adds a global `EXIF` variable (or AMD or CommonJS equivalent).
 
 Start with calling the `EXIF.getData` function. You pass it an image as a parameter:
+
 - either an image from a `<img src="image.jpg">`
 - OR a user selected image in a `<input type="file">` element on your page.
 
 As a second parameter you specify a callback function. In the callback function you should use `this` to access the image with the aforementioned metadata you can then use as you want.
-That image now has an extra `exifdata` property which is a Javascript object with the EXIF metadata. You can access it's properties to get data like the *image caption*, the *date a photo was taken* or it's *orientation*.
+That image now has an extra `exifdata` property which is a Javascript object with the EXIF metadata. You can access it's properties to get data like the _image caption_, the _date a photo was taken_ or it's _orientation_.
 
 You can get all tages with `EXIF.getTag`. Or get a single tag with `EXIF.getTag`, where you specify the tag as the second parameter.
 The tag names to use are listed in `EXIF.Tags` in `exif.js`.
@@ -44,38 +66,40 @@ The tag names to use are listed in `EXIF.Tags` in `exif.js`.
 **Important**: Note that you have to wait for the image to be completely loaded, before calling `getData` or any other function. It will silently fail otherwise.
 You can implement this wait, by running your exif-extracting logic on the `window.onLoad` function. Or on an image's own `onLoad` function.
 For jQuery users please note that you can NOT (reliably) use jQuery's `ready` event for this. Because it fires before images are loaded.
-You could use $(window).load() instead of $(document.ready() (please note that `exif-js has NO dependency on jQuery or any other external library). 
- 
+You could use $(window).load() instead of $(document.ready() (please note that `exif-js has NO dependency on jQuery or any other external library).
+
 **JavaScript**:
+
 ```javascript
-window.onload=getExif;
+window.onload = getExif;
 
 function getExif() {
-    var img1 = document.getElementById("img1");
-    EXIF.getData(img1, function() {
-        var make = EXIF.getTag(this, "Make");
-        var model = EXIF.getTag(this, "Model");
-        var makeAndModel = document.getElementById("makeAndModel");
-        makeAndModel.innerHTML = `${make} ${model}`;
-    });
+	var img1 = document.getElementById('img1');
+	EXIF.getData(img1, function() {
+		var make = EXIF.getTag(this, 'Make');
+		var model = EXIF.getTag(this, 'Model');
+		var makeAndModel = document.getElementById('makeAndModel');
+		makeAndModel.innerHTML = `${make} ${model}`;
+	});
 
-    var img2 = document.getElementById("img2");
-    EXIF.getData(img2, function() {
-        var allMetaData = EXIF.getAllTags(this);
-        var allMetaDataSpan = document.getElementById("allMetaDataSpan");
-        allMetaDataSpan.innerHTML = JSON.stringify(allMetaData, null, "\t");
-    });
+	var img2 = document.getElementById('img2');
+	EXIF.getData(img2, function() {
+		var allMetaData = EXIF.getAllTags(this);
+		var allMetaDataSpan = document.getElementById('allMetaDataSpan');
+		allMetaDataSpan.innerHTML = JSON.stringify(allMetaData, null, '\t');
+	});
 }
 ```
 
 **HTML**:
+
 ```html
 <img src="image1.jpg" id="img1" />
 <pre>Make and model: <span id="makeAndModel"></span></pre>
-<br/>
+<br />
 <img src="image2.jpg" id="img2" />
 <pre id="allMetaDataSpan"></pre>
-<br/>
+<br />
 ```
 
 Note there are also alternate tags, such the `EXIF.TiffTags`. See the source code for the full definition and use.
@@ -88,6 +112,7 @@ Since issue #53 was merged also extracting of XMP data is supported. To not slow
 Please refer to the [source code](exif.js) for more advanced usages such as getting image data from a [File/Blob](https://developer.mozilla.org/en/docs/Web/API/Blob) object (`EXIF.readFromBinaryFile`).
 
 ## Contributions
+
 This is an [open source project](LICENSE.md). Please contribute by forking this repo and issueing a pull request. The project has had notable contributions already, like reading ITPC data.
 
 You can also contribute by [filing bugs or new features please issue](/exif-js/issues).
